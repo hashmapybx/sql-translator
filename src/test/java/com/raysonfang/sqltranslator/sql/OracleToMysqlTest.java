@@ -27,7 +27,7 @@ public class OracleToMysqlTest extends TestCase {
                 "  KEY_NAME VARCHAR2(500) ,\n" +
                 "  KEY_ENAME VARCHAR2(2000) ,\n" +
                 "  OR_VALID_D VARCHAR2(1) DEFAULT 0 ,\n" +
-                "  MEMO VARCHAR2(2000) ,\n" +
+                "  MEMO BLOB ,\n" +
                 "  TIME_MARK TIMESTAMP(6) ,\n" +
                 "  STA VARCHAR2(10) DEFAULT 1 ,\n" +
                 "  KEY_SEQ NUMBER(20) ,\n" +
@@ -38,7 +38,17 @@ public class OracleToMysqlTest extends TestCase {
                 "  FDELETE_ID VARCHAR2(1) DEFAULT 0  NOT NULL ,\n" +
                 "  constraint PK_T_DICT primary key(ID)\n" +
                 ");";
-        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.oracle);
+        String sql1 = "CREATE TABLE my_table (\n" +
+                "    ID NUMBER(10),\n" +
+                "    clob_column CLOB,\n" +
+                "    blob_column BLOB,\n" +
+                "    some_other_column VARCHAR2(100),\n" +
+                "    creation_date DATE DEFAULT SYSDATE,\n" +
+                "    last_modified DATE,\n" +
+                "    CONSTRAINT pk_my_table PRIMARY KEY (ID),\n" +
+                "    CONSTRAINT uk_my_table UNIQUE (some_other_column)\n" +
+                ")";
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql1, DbType.oracle);
         StringBuilder out = new StringBuilder();
         OracleToMySqlOutputVisitor visitor = new OracleToMySqlOutputVisitor(out, false);
         for(SQLStatement sqlStatement : stmtList) {

@@ -4,14 +4,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
-import com.alibaba.druid.sql.ast.expr.SQLExistsExpr;
-import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
-import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
-import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
-import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
-import com.alibaba.druid.sql.ast.expr.SQLVariantRefExpr;
+import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
@@ -30,7 +23,6 @@ import com.raysonfang.sqltranslator.sql.dialect.mysql.util.MySqlUtil;
 import com.raysonfang.sqltranslator.sql.dialect.oracle.function.OracleToMySqlFunctionTransform;
 import com.raysonfang.sqltranslator.sql.dialect.oracle.util.OracleSQLDataTypeTransformUtil;
 import com.raysonfang.sqltranslator.util.MapCacheUtil;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -43,17 +35,17 @@ import java.util.Optional;
  * @author rayson.fang
  * @date 2021/02/05 12:11
  **/
-public class OracleToMySqlOutputVisitor extends OracleOutputVisitor {
-    
+public class OracleToStarrocksOutputVisitor extends OracleOutputVisitor {
+
     private final OracleToMySqlFunctionTransform functionTransform = new OracleToMySqlFunctionTransform();
     // 目标数据库类型
     private final DbType distDbType = DbType.mysql;
-    
-    public OracleToMySqlOutputVisitor(Appendable appender, boolean printPostSemi){
+
+    public OracleToStarrocksOutputVisitor(Appendable appender, boolean printPostSemi){
         super(appender, printPostSemi);
     }
-    
-    public OracleToMySqlOutputVisitor(Appendable appender){
+
+    public OracleToStarrocksOutputVisitor(Appendable appender){
         super(appender);
     }
     
