@@ -58,11 +58,12 @@ public class OracleToMysqlTest extends TestCase {
     }
     
     public void test2_select() {
+
         String sql = "SELECT '='||TRIM(' HELLO ')||'=' FROM DUAL;";
         sql +="select sys_guid(),sysdate,'oracle'  from dual;";
         sql += "select key,value,to_char(sysdate, 'yyyyMMdd'),to_char(#{num})--测试\n" +
                 "       ,to_char(UPDATE_TIME, 'yyyyMMdd'),to_char(12312),to_char(state),to_char(#{num})  val,to_char(1123.26723,'99999999.99'),to_char( to_number( '4' ) + 1, '00' )\n" +
-                "       from SYS_TEST where id = #{id}";
+                "       from SYS_TEST where id = #{id} and dt = to_date(#{dt}, 'yyyymmdd')";
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, DbType.oracle);
         StringBuilder out = new StringBuilder();
         OracleToMySqlOutputVisitor visitor = new OracleToMySqlOutputVisitor(out, false);

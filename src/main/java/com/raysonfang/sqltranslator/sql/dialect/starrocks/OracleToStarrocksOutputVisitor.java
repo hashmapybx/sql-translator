@@ -1,4 +1,4 @@
-package com.raysonfang.sqltranslator.sql.dialect.oracle;
+package com.raysonfang.sqltranslator.sql.dialect.starrocks;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
@@ -22,6 +22,7 @@ import com.alibaba.druid.util.JdbcConstants;
 import com.raysonfang.sqltranslator.sql.dialect.mysql.util.MySqlUtil;
 import com.raysonfang.sqltranslator.sql.dialect.oracle.function.OracleToMySqlFunctionTransform;
 import com.raysonfang.sqltranslator.sql.dialect.oracle.util.OracleSQLDataTypeTransformUtil;
+import com.raysonfang.sqltranslator.sql.dialect.starrocks.function.OracleToStarrocksFunctionTransform;
 import com.raysonfang.sqltranslator.util.MapCacheUtil;
 import org.springframework.util.ObjectUtils;
 
@@ -37,7 +38,8 @@ import java.util.Optional;
  **/
 public class OracleToStarrocksOutputVisitor extends OracleOutputVisitor {
 
-    private final OracleToMySqlFunctionTransform functionTransform = new OracleToMySqlFunctionTransform();
+//    private final OracleToMySqlFunctionTransform functionTransform = new OracleToMySqlFunctionTransform();
+    private final OracleToStarrocksFunctionTransform functionTransform = new OracleToStarrocksFunctionTransform();
     // 目标数据库类型
     private final DbType distDbType = DbType.mysql;
 
@@ -285,7 +287,9 @@ public class OracleToStarrocksOutputVisitor extends OracleOutputVisitor {
                     sqlColumnDefinition.setName("`"+columnName+"`");
                 }
                 // 类型转换在这边完成
-                sqlColumnDefinition.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToMySql(SQLParserUtils.createExprParser(sqlColumnDefinition.getDataType().toString(), DbType.oracle).parseDataType()));
+//                sqlColumnDefinition.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToMySql(SQLParserUtils.createExprParser(sqlColumnDefinition.getDataType().toString(), DbType.oracle).parseDataType()));
+                sqlColumnDefinition.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToSR(SQLParserUtils.createExprParser(sqlColumnDefinition.getDataType().toString(), DbType.oracle).parseDataType()));
+
                 if(sqlColumnDefinition.getDefaultExpr() != null) {
                     // 获取建表语句中的default关键字
                     SQLExpr expr = sqlColumnDefinition.getDefaultExpr();
@@ -352,7 +356,8 @@ public class OracleToStarrocksOutputVisitor extends OracleOutputVisitor {
             if(MySqlUtil.containsKeyWords(columnName)){
                 x.setName("`"+columnName+"`");
             }
-            x.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToMySql(SQLParserUtils.createExprParser(x.getDataType().toString(), DbType.oracle).parseDataType()));
+//            x.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToMySql(SQLParserUtils.createExprParser(x.getDataType().toString(), DbType.oracle).parseDataType()));
+            x.setDataType(OracleSQLDataTypeTransformUtil.transformOracleToSR(SQLParserUtils.createExprParser(x.getDataType().toString(), DbType.oracle).parseDataType()));
             if(x.getDefaultExpr() != null) {
                 SQLExpr expr = x.getDefaultExpr();
                 if(expr instanceof SQLMethodInvokeExpr) {

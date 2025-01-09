@@ -13,4 +13,37 @@ sql转换工具，sql翻译，sql格式化，支持oracle转mysql，后续支持
 #### 2. 支持在表名前动态配置用户名
 > 由于在项目中的表名一般不会使用[user].tableName, 但是在某些不跨库场景下，需要在A用户下，去访问B用户的表时。就需要根据表名来动态加上用户B。
 
+#### 1.支持oracle create语法到Starrocks的主键表的语法
+
+```sql
+CREATE TABLE my_table (  
+                     ID NUMBER(10),  
+                     clob_column CLOB,     
+                     blob_column BLOB,     
+                     some_other_column VARCHAR2(100),     
+                     creation_date DATE DEFAULT SYSDATE,     
+                     last_modified DATE,     
+                     CONSTRAINT pk_my_table PRIMARY KEY (ID),     
+                     CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES departments(department_id),      
+                     CONSTRAINT uk_my_table UNIQUE (some_other_column)     
+                );
+```
+SR
+```sql
+
+CREATE TABLE my_table (
+	ID bigint,
+	clob_column VARBINARY,
+	blob_column VARBINARY,
+	some_other_column varchar(100),
+	creation_date datetime DEFAULT CURRENT_TIMESTAMP,
+	last_modified datetime
+)
+PRIMARY KEY (ID,some_other_column)
+DISTRIBUTED BY HASH (ID,some_other_column);
+
+```
+
+
+
 
